@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if current_user.is_admin %}
+<div class="mx-4 mt-6">
+    <a href="{{ url_for('register') }}" 
+       class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out inline-flex items-center">
+        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+        </svg>
+        إنشاء مستخدم جديد
+    </a>
+</div>
+{% endif %}
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 sm:p-6">
+    <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <div class="flex items-center">
+            <div class="p-4 rounded-full bg-blue-600 bg-opacity-90 shadow-md">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+            </div>
+            <div class="ml-5">
+                <h2 class="text-gray-700 font-medium">إجمالي المنتجات</h2>
+                <p class="text-3xl font-bold text-gray-900">{{ total_items }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <div class="flex items-center">
+            <div class="p-4 rounded-full bg-red-600 bg-opacity-90 shadow-md">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <div class="ml-5">
+                <h2 class="text-gray-700 font-medium">المنتجات منخفضة المخزون</h2>
+                <p class="text-3xl font-bold text-gray-900">{{ low_stock }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <div class="flex items-center">
+            <div class="p-4 rounded-full bg-green-600 bg-opacity-90 shadow-md">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div class="ml-5">
+                <h2 class="text-gray-700 font-medium">إجمالي المبيعات</h2>
+                <p class="text-3xl font-bold text-gray-900">{{ total_sales }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6 p-4 sm:p-6">
+    <div class="bg-green-500 rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <div class="text-white">
+            <h5 class="text-xl font-semibold mb-2">الفواتير المدفوعة</h5>
+            <h3 class="text-3xl font-bold">{{ paid_invoices }}</h3>
+        </div>
+    </div>
+    
+    <div class="bg-yellow-500 rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <div class="text-white">
+            <h5 class="text-xl font-semibold mb-2">الفواتير المدفوعة جزئياً</h5>
+            <h3 class="text-3xl font-bold">{{ partial_invoices }}</h3>
+        </div>
+    </div>
+    
+    <div class="bg-red-500 rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <div class="text-white">
+            <h5 class="text-xl font-semibold mb-2">الفواتير المعلقة</h5>
+            <h3 class="text-3xl font-bold">{{ pending_invoices }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 sm:p-6">
+    <div class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">أحدث المبيعات</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700">التاريخ</th>
+                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700">المنتج</th>
+                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700">المبلغ</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for sale in recent_sales %}
+                    <tr class="hover:bg-gray-50 transition duration-150">
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ sale.sale_date.strftime('%Y-%m-%d') }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ sale.jeans.name }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">ج.م {{ "%.2f"|format(sale.total_amount) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">إجراءات سريعة</h2>
+        <div class="space-y-4">
+            <a href="{{ url_for('add') }}" class="block bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out text-center font-semibold">
+                إضافة منتج جديد
+            </a>
+            <a href="{{ url_for('export_csv') }}" class="block bg-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out text-center font-semibold">
+                تصدير المخزون
+            </a>
+            <a href="{{ url_for('alerts') }}" class="block bg-red-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition duration-300 ease-in-out text-center font-semibold">
+                عرض التنبيهات
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

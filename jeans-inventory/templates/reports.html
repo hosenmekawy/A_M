@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-right text-4xl font-bold text-gray-800 mb-6">تقارير</h1>
+    <!-- Weekly Sales Chart Card -->
+    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300 mb-6">
+        <h2 class="text-xl md:text-2xl font-bold mb-4 text-gray-800">مبيعات الأسبوع</h2>
+        <div class="w-full h-[300px] md:h-[400px]">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <!-- Inventory Summary Card -->
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
+            <h2 class="text-xl md:text-2xl font-bold mb-4 text-gray-800">ملخص المخزون</h2>
+            <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                <h3 class="text-base md:text-lg font-semibold text-blue-800 mb-2">إجمالي قيمة المخزون</h3>
+                <p class="text-2xl md:text-3xl font-bold text-blue-700">${{ "%.2f"|format(total_value) }}</p>
+            </div>
+        </div>
+
+        <!-- Total Sales Card -->
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
+            <h2 class="text-xl md:text-2xl font-bold mb-4 text-gray-800">إجمالي المبيعات</h2>
+            <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
+                <p class="text-2xl md:text-3xl font-bold text-purple-700">{{ total_sales }}</p>
+            </div>
+        </div>
+
+        <!-- Top Selling Products Card -->
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
+            <h2 class="text-xl md:text-2xl font-bold mb-4 text-gray-800">المنتجات الأكثر مبيعاً</h2>
+            <div class="space-y-3">
+                {% for item, total in top_selling %}
+                <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
+                    <h3 class="text-base md:text-lg font-semibold text-green-800 mb-1">{{ item.name }} </h3>
+                    <p class="text-green-700 text-sm md:text-base">إجمالي المبيعات: <span class="font-bold">{{ total }}</span> وحدة</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Export and Report Options -->
+    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
+        <div class="flex flex-col space-y-4">
+            <h2 class="text-xl md:text-2xl font-bold mb-4 text-gray-800">خيارات التقارير والتصدير</h2>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ url_for('download_sales_pdf', period='day') }}"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    تقرير اليوم
+                </a>
+                
+                <a href="{{ url_for('download_sales_pdf', period='week') }}"
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    تقرير الأسبوع
+                </a>
+                
+                <a href="{{ url_for('download_sales_pdf', period='month') }}"
+                    class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                    تقرير الشهر
+                </a>
+                
+                <a href="{{ url_for('download_sales_pdf', period='total') }}"
+                    class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                    التقرير الكامل
+                </a>
+
+                <a href="{{ url_for('export_csv') }}" 
+                   class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white text-sm md:text-base font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow hover:shadow-lg">
+                    <svg class="w-4 h-4 md:w-5 md:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    تصدير إلى CSV
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(54, 162, 235, 0.8)');
+    gradient.addColorStop(1, 'rgba(54, 162, 235, 0.1)');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ labels | tojson }},
+            datasets: [{
+                label: 'المبيعات اليومية (جنيه)',
+                data: {{ daily_sales | tojson }},
+                backgroundColor: gradient,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(54, 162, 235, 1)',
+                pointHoverBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false,
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString('ar-EG') + ' جنيه';
+                        },
+                        padding: 10
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    align: 'end',
+                    labels: {
+                        font: {
+                            family: 'Cairo',
+                            size: 12
+                        },
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    titleColor: '#333',
+                    bodyColor: '#666',
+                    bodyFont: {
+                        family: 'Cairo'
+                    },
+                    borderColor: 'rgba(54, 162, 235, 0.3)',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    });
+</script>
+{% endblock %}

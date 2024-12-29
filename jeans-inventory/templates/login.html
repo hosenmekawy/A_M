@@ -1,0 +1,105 @@
+    <!DOCTYPE html>
+    <html lang="ar" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>نظام تسجيل الدخول</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    </head>
+    <body class="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-blue-100">
+        <!-- Header -->
+        <header class="bg-white shadow-lg sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="/static/logo.svg" alt="Logo" class="h-10 w-auto mr-3 hover:scale-105 transition-transform">
+                        <h1 class="text-2xl md:text-3xl font-bold text-blue-900">نظام تسجيل الدخول</h1>
+                    </div>
+                    <button class="md:hidden rounded-lg p-2 hover:bg-blue-100 transition-colors" id="mobile-menu-button">
+                        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content with Sidebar -->
+        <div class="flex-grow flex flex-col md:flex-row">
+            <!-- Sidebar -->
+            <aside class="transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:static inset-y-0 right-0 z-40 bg-white shadow-xl md:shadow-lg w-72 md:flex-shrink-0">
+                <div class="h-full overflow-y-auto">
+                    <div class="p-8">
+                        <div class="flex items-center mb-8">
+                            <span class="text-xl font-bold text-blue-900">القائمة الرئيسية</span>
+                        </div>
+                        <nav class="space-y-4">
+                            <a href="#" class="flex items-center px-6 py-4 rounded-xl text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition-all transform hover:scale-105">
+                                <svg class="h-6 w-6 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                </svg>
+                                الرئيسية
+                            </a>
+                            <a href="#" class="flex items-center px-6 py-4 rounded-xl text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition-all transform hover:scale-105">
+                                <svg class="h-6 w-6 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                حسابي
+                            </a>
+                            <a href="#" class="flex items-center px-6 py-4 rounded-xl text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition-all transform hover:scale-105">
+                                <svg class="h-6 w-6 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                المساعدة
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-grow p-6 md:p-8 bg-blue-50">
+                <div class="max-w-lg mx-auto bg-white rounded-3xl shadow-2xl p-10">
+                    <h2 class="text-3xl font-bold mb-10 text-blue-900 text-center">تسجيل الدخول</h2>
+                    <form method="POST" class="space-y-8">
+                        <div>
+                            <label class="block text-gray-700 text-base font-bold mb-3" for="username">اسم المستخدم</label>
+                            <input type="text" name="username" id="username" required 
+                                class="block w-full px-6 py-4 rounded-xl border-2 border-gray-300 focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-blue-400 text-lg">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-base font-bold mb-3" for="password">كلمة المرور</label>
+                            <input type="password" name="password" id="password" required 
+                                class="block w-full px-6 py-4 rounded-xl border-2 border-gray-300 focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-blue-400 text-lg">
+                        </div>
+                        <button type="submit" 
+                            class="w-full bg-blue-600 text-white py-4 px-8 rounded-xl text-lg font-bold hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            دخول
+                        </button>
+                    </form>
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-white shadow-lg mt-auto">
+            <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
+                <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    <p class="text-gray-600 text-base">© 2024 جميع الحقوق محفوظة</p>
+                    <div class="flex space-x-8 rtl:space-x-reverse">
+                        <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">سياسة الخصوصية</a>
+                        <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">الشروط والأحكام</a>
+                        <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">اتصل بنا</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            document.getElementById('mobile-menu-button').addEventListener('click', function() {
+                const sidebar = document.querySelector('aside');
+                sidebar.classList.toggle('-translate-x-full');
+            });
+        </script>
+    </body>
+    </html>

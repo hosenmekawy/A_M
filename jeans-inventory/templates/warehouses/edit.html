@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 mt-8">
+    <div class="bg-white rounded-lg shadow-md">
+        <div class="bg-gray-100 px-6 py-4 rounded-t-lg">
+            <h2 class="text-2xl font-semibold text-gray-800">تعديل المخزن</h2>
+        </div>
+        <div class="p-6">
+            <form method="POST">
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">اسم المخزن</label>
+                    <input type="text" name="name" value="{{ warehouse.name }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">الموقع</label>
+                    <input type="text" name="location" value="{{ warehouse.location }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">الوصف</label>
+                    <textarea name="description" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3">{{ warehouse.description }}</textarea>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">حفظ التغييرات</button>
+                    <a href="{{ url_for('list_warehouses') }}" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">إلغاء</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

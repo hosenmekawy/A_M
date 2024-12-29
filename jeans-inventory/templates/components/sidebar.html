@@ -1,0 +1,143 @@
+<aside class="bg-gradient-to-b from-gray-800 to-gray-900 text-white w-full md:w-64 min-h-screen px-4 py-6 shadow-xl">
+    <div class="mb-8 transition-transform hover:scale-105">
+        {% if settings.logo_url %}
+            <img src="{{ url_for('static', filename=settings.logo_url.replace('/static/', '')) }}" alt="شعار متجر الجينز" class="mx-auto rounded-lg shadow-md w-32 h-32 object-cover">
+        {% else %}
+            <img src="{{ url_for('static', filename='img/default-logo.png') }}" alt="شعار متجر الجينز" class="mx-auto rounded-lg shadow-md w-32 h-32 object-cover">
+        {% endif %}
+    </div>
+    <nav>
+        <ul class="space-y-2">
+            {% set order = settings.sidebar_order.split(',') %}
+            {% for item in order %}
+                {% if item == 'dashboard' and settings.show_dashboard %}
+                    <li>
+                        <a href="/dashboard" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                            <svg class="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">لوحة التحكم</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if item == 'inventory' and settings.show_inventory %}
+                    <li>
+                        <a href="/inventory" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                            <svg class="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">المخزون</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if item == 'warehouses' and settings.show_warehouses %}
+                    <li class="sidebar-item">
+                        <a href="#" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group" onclick="toggleSubmenu('warehouseSubmenu')">
+                            <i class="fas fa-warehouse text-gray-300 group-hover:text-white transition-colors w-6 h-6"></i>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">إدارة المخازن</span>
+                            <i class="fas fa-chevron-down text-gray-300 group-hover:text-white transition-colors ml-auto"></i>
+                        </a>
+                        <div id="warehouseSubmenu" class="hidden pl-8">
+                            <a href="{{ url_for('list_warehouses') }}" class="flex items-center gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                                <i class="fas fa-list text-gray-300 group-hover:text-white transition-colors w-6 h-6"></i>
+                                <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">عرض المخازن</span>
+                            </a>
+                            <a href="{{ url_for('add_warehouse') }}" class="flex items-center gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                                <i class="fas fa-plus text-gray-300 group-hover:text-white transition-colors w-6 h-6"></i>
+                                <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">إضافة مخزن جديد</span>
+                            </a>
+                        </div>
+                    </li>
+                {% endif %}
+
+                {% if item == 'sales' and settings.show_sales %}
+                    <li>
+                        <a href="/sales" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                            <svg class="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">المبيعات</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if item == 'alerts' and settings.show_alerts %}
+                    <li>
+                        <a href="/alerts" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                            <svg class="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">التنبيهات</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if item == 'invoices' and settings.show_invoices %}
+                    <li>
+                        <a href="{{ url_for('list_invoices') }}" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                            <svg class="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">الفواتير</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if item == 'reports' and settings.show_reports %}
+                    <li>
+                        <a href="/reports" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                            <svg class="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">التقارير</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if item == 'debtors' and settings.show_debtors %}
+                    <li class="sidebar-item">
+                        <a href="{{ url_for('debtors') }}" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                            <i class="fas fa-hand-holding-usd text-gray-300 group-hover:text-white transition-colors w-6 h-6"></i>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">المديونيات</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if item == 'clients' and settings.show_clients %}
+                    <li class="sidebar-item">
+                        <a href="{{ url_for('list_clients') }}" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                            <i class="fas fa-users text-gray-300 group-hover:text-white transition-colors w-6 h-6"></i>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">العملاء</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if item == 'settings' and settings.show_settings %}
+                    <li class="sidebar-item">
+                        <a href="{{ url_for('settings') }}" class="flex items-center justify-start gap-4 p-4 hover:bg-gray-700/60 rounded-xl transition-all duration-300 ease-in-out hover:shadow-lg group">
+                            <i class="fas fa-cog text-gray-300 group-hover:text-white transition-colors w-6 h-6"></i>
+                            <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">الإعدادات</span>
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+</aside>
+
+<script>
+function toggleSubmenu(id) {
+    const submenu = document.getElementById(id);
+    if (submenu) {
+        submenu.classList.toggle('hidden');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.pathname.includes('warehouse')) {
+        document.getElementById('warehouseSubmenu').classList.remove('hidden');
+    }
+});
+</script>

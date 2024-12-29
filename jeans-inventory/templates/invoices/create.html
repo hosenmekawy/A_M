@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-6">إنشاء فاتورة جديدة</h2>
+    
+    <div class="mb-6">
+        <div class="flex items-center gap-4 mb-4">
+            <select id="clientSelect" class="w-full border rounded-lg px-3 py-2">
+                <option value="">اختر عميل</option>
+                {% for client in clients %}
+                <option value="{{ client.id }}"
+                        data-phone="{{ client.phone }}"
+                        data-location="{{ client.location }}"
+                        data-gender="{{ client.gender }}">
+                    {{ client.name }} - {{ client.phone }}
+                </option>
+                {% endfor %}
+            </select>
+            <button type="button" onclick="openModal()"
+                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+                <i class="fas fa-plus"></i> عميل جديد
+            </button>
+        </div>
+    </div>
+
+    <form method="POST" id="invoiceForm">
+        <input type="hidden" name="client_id" id="client_id">
+        <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+            متابعة إنشاء الفاتورة
+        </button>
+    </form>
+</div>
+
+<!-- Modal -->
+<div id="clientModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">إضافة عميل جديد</h3>
+            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form id="newClientForm" onsubmit="submitClientForm(event)">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">اسم العميل</label>
+                    <input type="text" name="client_name" required class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">رقم الهاتف</label>
+                    <input type="tel" name="client_phone" required class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">العنوان</label>
+                    <input type="text" name="client_location" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">النوع</label>
+                    <select name="client_gender" class="w-full border rounded-lg px-3 py-2">
+                        <option value="male">ذكر</option>
+                        <option value="female">أنثى</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button type="button" onclick="closeModal()" 
+                    class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">
+                    إلغاء
+                </button>
+                <button type="submit" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                    حفظ
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openModal() {
+    document.getElementById('clientModal').classList.remove('hidden');
+    document.getElementById('clientModal').classList.add('flex');
+}
+
+function closeModal() {
+    document.getElementById('clientModal').classList.add('hidden');
+    document.getElementById('clientModal').classList.remove('flex');
+}
+
+document.getElementById('clientSelect').addEventListener('change', function() {
+    const clientId = this.value;
+    document.getElementById('client_id').value = clientId;
+    if (!clientId) {
+        document.getElementById('invoiceForm').classList.add('hidden');
+    } else {
+        document.getElementById('invoiceForm').classList.remove('hidden');
+    }
+});
+
+function submitClientForm(event) {
+    event.preventDefault();
+    const formData = new FormData(document.getElementById('newClientForm'));
+    
+    fetch('/api/create_client', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(client => {
+        const select = document.getElementById('clientSelect');
+        const option = new Option(`${client.name} - ${client.phone}`, client.id);
+        select.add(option);
+        select.value = client.id;
+        document.getElementById('client_id').value = client.id;
+        closeModal();
+        document.getElementById('newClientForm').reset();
+    });
+}
+</script>
+{% endblock %}

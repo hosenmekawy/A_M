@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-800">{{ warehouse.name }}</h2>
+            <p class="text-sm text-gray-600">{{ warehouse.location }}</p>
+        </div>
+        <div class="p-6">
+            <div class="mb-8">
+                <h4 class="text-xl font-semibold text-gray-800 mb-2">وصف المخزن</h4>
+                <p class="text-gray-600">{{ warehouse.description }}</p>
+            </div>
+            
+            <div>
+                <h4 class="text-xl font-semibold text-gray-800 mb-4">المخزون الحالي</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">المنتج</th>
+                                <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">الكمية</th>
+                                <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">السعر</th>
+                                <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">القيمة الإجمالية</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for stock in stocks %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ stock.jeans.name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ stock.quantity }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ "%.2f"|format(stock.jeans.price) }} جنيه</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ "%.2f"|format(stock.quantity * stock.jeans.price) }} جنيه</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

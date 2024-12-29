@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6 text-gray-900">إنشاء فاتورة جديدة</h2>
+        
+        <form method="POST" class="space-y-6" dir="rtl">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">اسم العميل</label>
+                <input type="text" name="customer_name" required
+                       class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+            </div>
+            
+            <div class="flex justify-end">
+                <button type="submit" 
+                        class="w-full sm:w-auto bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                    إنشاء الفاتورة
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-8">
+        <h3 class="text-xl md:text-2xl font-bold mb-4 text-gray-900">الفواتير السابقة</h3>
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200" dir="rtl">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-sm font-semibold text-gray-700">رقم الفاتورة</th>
+                            <th class="px-4 py-3 text-sm font-semibold text-gray-700">اسم العميل</th>
+                            <th class="hidden md:table-cell px-4 py-3 text-sm font-semibold text-gray-700">التاريخ</th>
+                            <th class="px-4 py-3 text-sm font-semibold text-gray-700">المبلغ الإجمالي</th>
+                            <th class="hidden sm:table-cell px-4 py-3 text-sm font-semibold text-gray-700">الحالة</th>
+                            <th class="px-4 py-3 text-sm font-semibold text-gray-700">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for invoice in invoices %}
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ invoice.invoice_number }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ invoice.customer_name }}</td>
+                            <td class="hidden md:table-cell px-4 py-3 text-sm text-gray-500">{{ invoice.date.strftime('%Y-%m-%d') }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ "%.2f"|format(invoice.total_amount) }} جنيه</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-sm">
+                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium
+                                    {% if invoice.status == 'paid' %}
+                                        bg-green-100 text-green-800
+                                    {% elif invoice.status == 'pending' %}
+                                        bg-yellow-100 text-yellow-800
+                                    {% else %}
+                                        bg-red-100 text-red-800
+                                    {% endif %}
+                                ">
+                                    {% if invoice.status == 'paid' %}
+                                        تم الدفع
+                                    {% elif invoice.status == 'pending' %}
+                                        قيد الانتظار
+                                    {% else %}
+                                        غير مدفوع
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <a href="{{ url_for('view_invoice', invoice_id=invoice.id) }}" 
+                                   class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                                    عرض
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

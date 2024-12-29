@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6" dir="rtl">
+    <div class="border-b pb-4 mb-4">
+        <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-bold">فاتورة رقم: {{ invoice.invoice_number }}</h2>
+            <div class="text-gray-600">
+                التاريخ: {{ invoice.date.strftime('%Y-%m-%d') }}
+            </div>
+        </div>
+        <div class="mt-2">
+            <p class="text-gray-600">العميل: {{ invoice.customer_name }}</p>
+        </div>
+    </div>
+
+    <div class="mb-6">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2">المنتج</th>
+                    <th class="px-4 py-2">الكمية</th>
+                    <th class="px-4 py-2">السعر</th>
+                    <th class="px-4 py-2">المجموع</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice.items %}
+                <tr class="border-b">
+                    <td class="px-4 py-2">{{ item.jeans.brand }} - {{ item.jeans.style }}</td>
+                    <td class="px-4 py-2">{{ item.quantity }}</td>
+                    <td class="px-4 py-2">{{ "%.2f"|format(item.price) }} ريال</td>
+                    <td class="px-4 py-2">{{ "%.2f"|format(item.subtotal) }} ريال</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="font-bold">
+                    <td colspan="3" class="px-4 py-2 text-left">المجموع الكلي:</td>
+                    <td class="px-4 py-2">{{ "%.2f"|format(invoice.total_amount) }} ريال</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="flex justify-between items-center">
+        <div>
+            <span class="px-4 py-2 rounded
+                {% if invoice.status == 'paid' %}
+                    bg-green-100 text-green-800
+                {% elif invoice.status == 'pending' %}
+                    bg-yellow-100 text-yellow-800
+                {% else %}
+                    bg-red-100 text-red-800
+                {% endif %}
+            ">
+                {{ invoice.status }}
+            </span>
+        </div>
+        <div class="space-x-2">
+            <button onclick="window.print()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                طباعة
+            </button>
+            {% if invoice.status == 'pending' %}
+            <a href="{{ url_for('mark_paid', invoice_id=invoice.id) }}" 
+               class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                تأكيد الدفع
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

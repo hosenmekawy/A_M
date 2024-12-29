@@ -1,0 +1,23 @@
+<footer class="bg-gray-900 text-white mt-8">
+    <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="text-center md:text-right space-y-3">
+                <h3 class="text-2xl font-bold text-blue-400">{{ settings.about_title or 'معلومات عنا' }}</h3>
+                <p class="text-gray-300 hover:text-white transition-colors duration-300 text-lg">{{ settings.about_text or 'نظام إدارة مخزون الجينز الفاخر' }}</p>
+            </div>
+            <div class="text-center md:text-right space-y-3">
+                <h3 class="text-2xl font-bold text-blue-400">روابط سريعة</h3>
+                <ul class="space-y-3">
+                    <li><a href="/dashboard" class="text-gray-300 hover:text-white transition-colors duration-300 text-lg block">لوحة التحكم</a></li>
+                    <li><a href="/reports" class="text-gray-300 hover:text-white transition-colors duration-300 text-lg block">التقارير</a></li>
+                    <li><a href="/settings" class="text-gray-300 hover:text-white transition-colors duration-300 text-lg block">الإعدادات</a></li>
+                </ul>
+            </div>
+            <div class="text-center md:text-right space-y-3">
+                <h3 class="text-2xl font-bold text-blue-400">اتصل بنا</h3>
+                <p class="text-gray-300 hover:text-white transition-colors duration-300 text-lg">البريد الإلكتروني: {{ settings.contact_email }}</p>
+                <p class="text-gray-300 hover:text-white transition-colors duration-300 text-lg">الهاتف: {{ settings.contact_phone }}</p>
+            </div>
+        </div>
+    </div>
+</footer>

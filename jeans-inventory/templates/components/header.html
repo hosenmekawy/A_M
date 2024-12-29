@@ -1,0 +1,80 @@
+<header class="bg-gradient-to-b from-gray-800 to-gray-900 shadow-2xl">
+    <div class="container mx-auto px-6">
+        <div class="flex justify-between items-center py-6">
+            <div class="flex items-center space-x-4">
+                {% if settings.logo_url %}
+                    <img src="{{ url_for('static', filename=settings.logo_url.replace('/static/', '')) }}" alt="شعار متجر الجينز" class="h-14 w-14 rounded-full shadow-md transform hover:scale-110 transition-transform duration-300">
+                {% else %}
+                    <img src="{{ url_for('static', filename='img/default-logo.png') }}" alt="شعار متجر الجينز" class="h-14 w-14 rounded-full shadow-md transform hover:scale-110 transition-transform duration-300">
+                {% endif %}
+                <h1 class="text-3xl font-extrabold text-white tracking-wider hover:text-blue-200 transition-colors duration-300">A&M</h1>
+            </div>
+            <span class="text-white text-lg" id="currentTime"></span>
+            <div class="flex items-center space-x-6">
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 text-white hover:text-blue-200 transition-colors duration-300">
+                        <span class="text-lg font-medium">{{ current_user.username }}</span>
+                        <img src="https://i.pravatar.cc/150?img=12" alt="Profile" class="h-10 w-10 rounded-full border-2 border-white">
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 hidden group-hover:block">
+                        <button onclick="openModal('profileModal')" class="block w-full text-right px-4 py-2 text-gray-800 hover:bg-blue-50">الملف الشخصي</button>
+                        <button onclick="openModal('settingsModal')" class="block w-full text-right px-4 py-2 text-gray-800 hover:bg-blue-50">الإعدادات</button>
+                        <a href="/logout" class="block w-full text-right px-4 py-2 text-red-600 hover:bg-red-50">تسجيل الخروج</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Profile Modal -->
+<div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+    <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">الملف الشخصي</h2>
+            <button onclick="closeModal('profileModal')" class="text-gray-500 hover:text-gray-700">×</button>
+        </div>
+        <div class="space-y-4">
+            <!-- Add profile content here -->
+        </div>
+    </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+    <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">الإعدادات</h2>
+            <button onclick="closeModal('settingsModal')" class="text-gray-500 hover:text-gray-700">×</button>
+        </div>
+        <div class="space-y-4">
+            <!-- Add settings content here -->
+        </div>
+    </div>
+</div>
+
+<script>
+function updateTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('ar-US');
+    const dateString = now.toLocaleDateString('ar-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    document.getElementById('currentTime').textContent = `${timeString} - ${dateString}`;
+}
+
+function openModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+    document.getElementById(modalId).classList.add('flex');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('flex');
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+setInterval(updateTime, 1000);
+updateTime();
+</script>

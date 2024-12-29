@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 rtl">
+    <h2 class="text-3xl font-bold mb-8 text-right bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">إعدادات النظام</h2>
+    <form method="POST" enctype="multipart/form-data" class="max-w-lg mx-auto bg-white rounded-2xl shadow-lg p-8">
+        <div class="mb-6">
+            <label class="block text-gray-700 text-right mb-2 font-medium">اسم العلامة التجارية</label>
+            <input type="text" name="brand_name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" value="{{ settings.brand_name }}" dir="rtl">
+        </div>
+        <div class="mb-6 form-group">
+            <label class="block text-gray-700 text-right mb-2 font-medium">الشعار</label>
+            {% if settings.logo_url %}
+                <img src="{{ url_for('static', filename=settings.logo_url) }}" class="rounded-lg shadow-sm mb-3" style="max-height: 100px">
+            {% endif %}
+            <input type="file" name="logo" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" dir="rtl">
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700 text-right mb-2 font-medium">البريد الإلكتروني للمالك</label>
+            <input type="email" name="owner_email" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" value="{{ settings.owner_email }}" dir="rtl">
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700 text-right mb-2 font-medium">لون النمط</label>
+            <input type="color" name="theme_color" class="w-full h-12 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" value="{{ settings.theme_color }}">
+        </div>
+
+        <div class="mb-10">
+            <h2 class="text-2xl font-bold mb-6 text-right bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">عناصر القائمة الجانبية</h2>
+            <div class="space-y-4" id="sortable-sidebar">
+                {% set order = settings.sidebar_order.split(',') %}
+                {% for item in order %}
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl cursor-move hover:shadow-md transition-all duration-200">
+                    <input type="hidden" name="sidebar_order" value="{{ item }}">
+                    <div class="flex items-center justify-end gap-3">
+                        <label class="text-gray-700 font-medium">إظهار</label>
+                        <input type="checkbox" name="show_{{ item }}" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-200" 
+                            {% if item == 'dashboard' and settings.show_dashboard %}checked{% endif %}
+                            {% if item == 'inventory' and settings.show_inventory %}checked{% endif %}
+                            {% if item == 'warehouses' and settings.show_warehouses %}checked{% endif %}
+                            {% if item == 'sales' and settings.show_sales %}checked{% endif %}
+                            {% if item == 'alerts' and settings.show_alerts %}checked{% endif %}
+                            {% if item == 'invoices' and settings.show_invoices %}checked{% endif %}
+                            {% if item == 'reports' and settings.show_reports %}checked{% endif %}
+                            {% if item == 'debtors' and settings.show_debtors %}checked{% endif %}
+                            {% if item == 'clients' and settings.show_clients %}checked{% endif %}
+                            {% if item == 'settings' and settings.show_settings %}checked{% endif %}>
+                    </div>
+                    <span class="text-gray-700 font-medium">
+                        {% if item == 'dashboard' %}لوحة التحكم
+                        {% elif item == 'inventory' %}المخزون
+                        {% elif item == 'warehouses' %}المخازن
+                        {% elif item == 'sales' %}المبيعات
+                        {% elif item == 'alerts' %}التنبيهات
+                        {% elif item == 'invoices' %}الفواتير
+                        {% elif item == 'reports' %}التقارير
+                        {% elif item == 'debtors' %}المديونيات
+                        {% elif item == 'clients' %}العملاء
+                        {% elif item == 'settings' %}الإعدادات
+                        {% endif %}
+                    </span>
+                    <i class="fas fa-grip-lines text-gray-400"></i>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-10">
+            <h2 class="text-2xl font-bold mb-6 text-right bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">إعدادات تذييل الصفحة</h2>
+            <div class="space-y-4">
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-right mb-2 font-medium">عنوان "معلومات عنا"</label>
+                    <input type="text" name="about_title" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" value="{{ settings.about_title }}" dir="rtl">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-right mb-2 font-medium">نص "معلومات عنا"</label>
+                    <textarea name="about_text" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" rows="3" dir="rtl">{{ settings.about_text }}</textarea>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-right mb-2 font-medium">رقم الهاتف</label>
+                    <input type="text" name="contact_phone" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" value="{{ settings.contact_phone }}" dir="rtl">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-right mb-2 font-medium">البريد الإلكتروني للتواصل</label>
+                    <input type="email" name="contact_email" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" value="{{ settings.contact_email }}" dir="rtl">
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">حفظ الإعدادات</button>
+    </form>
+
+    <div class="container mx-auto px-4 py-8 rtl">
+        <h2 class="text-2xl font-bold mb-8 text-right bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">نسخ احتياطي لقاعدة البيانات</h2>
+        
+        <div class="max-w-lg mx-auto space-y-8 bg-white rounded-2xl shadow-lg p-8">
+            <div class="text-right">
+                <h3 class="text-xl mb-4 font-semibold">تصدير قاعدة البيانات</h3>
+                <a href="{{ url_for('export_database') }}" 
+                   class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 px-6 rounded-xl inline-block transition duration-200 shadow-lg hover:shadow-xl">
+                    تحميل نسخة احتياطية
+                </a>
+            </div>
+            
+            <div class="text-right">
+                <h3 class="text-xl mb-4 font-semibold">استيراد قاعدة البيانات</h3>
+                <form action="{{ url_for('import_database') }}" method="POST" enctype="multipart/form-data">
+                    <div class="mb-6">
+                        <input type="file" name="database_file" 
+                               class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" 
+                               accept=".db"
+                               required>
+                    </div>
+                    <button type="submit" 
+                            class="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-xl transition duration-200 shadow-lg hover:shadow-xl"
+                            onclick="return confirm('هل أنت متأكد؟ سيتم استبدال قاعدة البيانات الحالية.')">
+                        استيراد قاعدة البيانات
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script>
+new Sortable(document.getElementById('sortable-sidebar'), {
+    animation: 150,
+    ghostClass: 'bg-gray-100'
+});
+</script>
+{% endblock %}

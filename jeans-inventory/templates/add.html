@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-blue-600 to-blue-700">
+                <h3 class="text-2xl font-bold text-white text-right">إضافة منتج جديد</h3>
+            </div>
+            <div class="px-4 py-5 sm:p-6 space-y-6">
+                <form method="POST" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 text-right">اسم المنتج</label>
+                            <input type="text" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 text-right">المقاسات</label>
+                            <input type="text" name="sizes" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 text-right">الألوان</label>
+                            <input type="text" name="colors" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 text-right">السعر بالجنيه</label>
+                            <input type="number" step="0.01" name="price" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 text-right">عدد القطع في السارية</label>
+                            <input type="number" name="pieces_per_dozen" value="6" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 text-right">عدد السارية في الشيكاره</label>
+                            <input type="number" name="dozens_per_package" value="48" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <label class="block text-lg font-medium text-gray-700 text-right mb-4">المخازن والكميات</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            {% for warehouse in warehouses %}
+                            <div class="flex items-center space-x-4 flex-row-reverse bg-gray-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="warehouses" value="{{ warehouse.id }}" class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label class="mr-3 block text-sm font-medium text-gray-700">{{ warehouse.name }}</label>
+                                </div>
+                                <div class="flex-1">
+                                    <input type="number" name="quantities" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="الكمية">
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                            إضافة المنتج
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

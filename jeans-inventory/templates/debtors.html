@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-b from-gray-800 to-gray-900 px-6 py-4">
+            <h2 class="text-2xl font-bold text-white mb-0">المديونيات</h2>
+        </div>
+        <div class="p-6">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-right text-lg font-semibold text-gray-700">اسم العميل</th>
+                            <th class="px-6 py-3 text-right text-lg font-semibold text-gray-700">رقم الهاتف</th>
+                            <th class="px-6 py-3 text-right text-lg font-semibold text-gray-700">الفواتير المستحقة</th>
+                            <th class="px-6 py-3 text-right text-lg font-semibold text-gray-700">إجمالي المديونية</th>
+                            <th class="px-6 py-3 text-right text-lg font-semibold text-gray-700">تسجيل دفع</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for client, total_debt in debtors %}
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 text-lg text-gray-900">{{ client.name }}</td>
+                            <td class="px-6 py-4 text-lg text-gray-900">{{ client.phone }}</td>
+                            <td class="px-6 py-4 text-lg text-gray-900">
+                                {% for invoice in client.invoices %}
+                                {% if invoice.status in ['pending', 'partial'] %}
+                                <div class="mb-2">
+                                    فاتورة #{{ invoice.invoice_number }}: {{ "%.2f"|format(invoice.remaining_amount) }} جنيه
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td class="px-6 py-4 text-lg font-medium text-red-600">{{ "%.2f"|format(total_debt) }} جنيه</td>
+                            <td class="px-6 py-4">
+                                <button class="inline-flex items-center px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium rounded-md transition-colors duration-150 ease-in-out" 
+                                        data-toggle="modal" 
+                                        data-target="#paymentModal{{ client.id }}">
+                                    تسجيل دفع
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Individual Payment Modal for each client -->
+                        <div class="modal fade" id="paymentModal{{ client.id }}" tabindex="-1">
+                            <div class="modal-dialog max-w-lg mx-auto">
+                                <div class="modal-content bg-white rounded-lg shadow-xl">
+                                    <div class="modal-header border-b border-gray-200 px-6 py-4">
+                                        <h5 class="text-xl font-semibold text-gray-900">تسجيل دفع - {{ client.name }}</h5>
+                                        <button type="button" class="text-gray-400 hover:text-gray-500" data-dismiss="modal">
+                                            <span class="text-2xl">×</span>
+                                        </button>
+                                    </div>
+                                    <form action="{{ url_for('add_client_payment', client_id=client.id) }}" method="POST">
+                                        <div class="modal-body p-6 space-y-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">الفواتير المستحقة:</label>
+                                                {% for invoice in client.invoices %}
+                                                {% if invoice.status in ['pending', 'partial'] %}
+                                                <div class="border border-gray-200 rounded-md p-3 mb-2">
+                                                    <div>رقم الفاتورة: {{ invoice.invoice_number }}</div>
+                                                    <div>المبلغ المتبقي: {{ "%.2f"|format(invoice.remaining_amount) }} جنيه</div>
+                                                </div>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">إجمالي المديونية</label>
+                                                <input type="text" value="{{ '%.2f'|format(total_debt) }} جنيه" class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50" readonly>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">المبلغ المدفوع</label>
+                                                <input type="number" step="0.01" name="amount" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required max="{{ total_debt }}">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">طريقة الدفع</label>
+                                                <select name="payment_method" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                                                    <option value="cash">كاش</option>
+                                                    <option value="visa">فيزا</option>
+                                                    <option value="wallet">محفظة إلكترونية</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">ملاحظات</label>
+                                                <textarea name="notes" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="2"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-t border-gray-200 px-6 py-4 flex justify-end space-x-2">
+                                            <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-md transition-colors duration-150 ease-in-out">تسجيل الدفع</button>
+                                            <button type="button" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-md transition-colors duration-150 ease-in-out" data-dismiss="modal">إلغاء</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

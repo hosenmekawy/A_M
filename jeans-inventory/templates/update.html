@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+            <h2 class="text-2xl font-semibold text-gray-800">تحديث المنتج</h2>
+        </div>
+        <div class="p-6">
+            <form method="POST" class="space-y-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">الباركود</label>
+                        <input type="text" name="barcode" value="{{ jeans.barcode }}" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">اسم المنتج</label>
+                        <input type="text" name="name" value="{{ jeans.name }}" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">المقاسات</label>
+                        <input type="text" name="sizes" value="{{ jeans.sizes }}" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">الألوان</label>
+                        <input type="text" name="colors" value="{{ jeans.colors }}" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">السعر</label>
+                        <input type="number" step="0.01" name="price" value="{{ jeans.price }}" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
+                    </div>
+
+                    {% for stock in jeans.stocks %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">الكمية ({{ stock.warehouse.name }})</label>
+                        <input type="number" name="quantity_{{ stock.warehouse_id }}" value="{{ stock.quantity }}" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
+                    </div>
+                    {% endfor %}
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">عدد القطع في الدستة</label>
+                        <input type="number" name="pieces_per_dozen" value="{{ jeans.pieces_per_dozen }}" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">عدد الدستة في الشيكارة</label>
+                        <input type="number" name="dozens_per_package" value="{{ jeans.dozens_per_package }}" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-4 rtl:space-x-reverse">
+                    <a href="{{ url_for('inventory') }}" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">إلغاء</a>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">تحديث</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

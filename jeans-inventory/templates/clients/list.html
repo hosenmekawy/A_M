@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 p-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-white">العملاء</h2>
+            <div class="space-x-4 rtl:space-x-reverse">
+                <a href="{{ url_for('export_clients') }}" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-file-excel mr-2"></i> تصدير إلى Excel
+                </a>
+                <a href="{{ url_for('new_client') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-plus mr-2"></i> إضافة عميل
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">اسم العميل</th>
+                            <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">رقم الهاتف</th>
+                            <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">العنوان</th>
+                            <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">عدد الفواتير</th>
+                            <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">إجمالي المشتريات</th>
+                            <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">المديونيات</th>
+                            <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for client in clients %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ client.name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ client.phone }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ client.location }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ client.invoices|length }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ "%.2f"|format(client.invoices|sum(attribute='total_amount')) }} جنيه</td>
+                            <td class="px-6 py-4 text-sm">
+                                {% set debt = client.invoices|selectattr('status', 'in', ['pending', 'partial'])|sum(attribute='remaining_amount') %}
+                                {% if debt > 0 %}
+                                <span class="text-red-600 font-medium">{{ "%.2f"|format(debt) }} جنيه</span>
+                                {% else %}
+                                <span class="text-green-600 font-medium">لا يوجد</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <div class="flex space-x-2 rtl:space-x-reverse">
+                                    <a href="{{ url_for('view_client', client_id=client.id) }}" class="inline-flex items-center p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('edit_client', client_id=client.id) }}" class="inline-flex items-center p-2 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 transition-colors">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto">
+        <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">إنشاء حساب مستخدم جديد</h2>
+            <div class="mb-6 bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                <p class="text-blue-800 text-sm">يمكن فقط للمالك والموارد البشرية إنشاء حسابات جديدة</p>
+            </div>
+            
+            <form method="POST" class="space-y-6">
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="username">اسم المستخدم</label>
+                    <input type="text" name="username" id="username" required 
+                           class="block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500 focus:outline-none transition duration-150">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="password">كلمة المرور</label>
+                    <input type="password" name="password" id="password" required 
+                           class="block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500 focus:outline-none transition duration-150">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="role">الدور الوظيفي</label>
+                    <select name="role" id="role" required 
+                            class="block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500 focus:outline-none transition duration-150">
+                        <option value="staff">موظف</option>
+                        {% if current_user.role == 'owner' %}
+                        <option value="hr">موارد بشرية</option>
+                        {% endif %}
+                    </select>
+                </div>
+                
+                <button type="submit" 
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
+                    إنشاء حساب
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 mt-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">مستويات الصلاحيات:</h3>
+            <ul class="space-y-3 text-sm text-gray-600">
+                <li class="flex items-start">
+                    <span class="font-medium ml-2">المالك:</span>
+                    <span>صلاحيات كاملة، يمكنه إنشاء حسابات موارد بشرية</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="font-medium ml-2">موارد بشرية:</span>
+                    <span>يمكنه إنشاء حسابات الموظفين</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="font-medium ml-2">موظف:</span>
+                    <span>إدارة المخزون الأساسية</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

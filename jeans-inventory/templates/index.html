@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-4">Inventory List</h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full table-auto">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2">Brand</th>
+                    <th class="px-4 py-2">Style</th>
+                    <th class="px-4 py-2">Size</th>
+                    <th class="px-4 py-2">Color</th>
+                    <th class="px-4 py-2">Quantity</th>
+                    <th class="px-4 py-2">Price</th>
+                    <th class="px-4 py-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in jeans %}
+                <tr class="border-b">
+                    <td class="px-4 py-2">{{ item.brand }}</td>
+                    <td class="px-4 py-2">{{ item.style }}</td>
+                    <td class="px-4 py-2">{{ item.size }}</td>
+                    <td class="px-4 py-2">{{ item.color }}</td>
+                    <td class="px-4 py-2">{{ item.quantity }}</td>
+                    <td class="px-4 py-2">${{ "%.2f"|format(item.price) }}</td>
+                    <td class="px-4 py-2">
+                        <a href="{{ url_for('update', id=item.id) }}" class="text-blue-600 hover:text-blue-800 mr-2">Edit</a>
+                        <a href="{{ url_for('delete', id=item.id) }}" class="text-red-600 hover:text-red-800" onclick="return confirm('Are you sure?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

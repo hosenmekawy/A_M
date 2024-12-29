@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg shadow-xl">
+        <div class="border-b border-gray-700 p-6">
+            <h2 class="text-2xl font-bold text-white">بيانات العميل</h2>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="text-xl font-semibold text-white mb-4">المعلومات الأساسية</h4>
+                    <div class="bg-gray-800 rounded-lg p-4">
+                        <dl class="space-y-4">
+                            <div class="flex justify-between">
+                                <dt class="text-gray-400">الاسم:</dt>
+                                <dd class="text-white">{{ client.name }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-400">رقم الهاتف:</dt>
+                                <dd class="text-white">{{ client.phone }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-400">العنوان:</dt>
+                                <dd class="text-white">{{ client.location }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-400">إجمالي المشتريات:</dt>
+                                <dd class="text-white">{{ "%.2f"|format(total_purchases) }} جنيه</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-400">المديونيات:</dt>
+                                <dd class="text-white">{{ "%.2f"|format(total_debt) }} جنيه</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-white mb-4">سجل الفواتير</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="text-gray-400 border-b border-gray-700">
+                                    <th class="px-4 py-2 text-right">رقم الفاتورة</th>
+                                    <th class="px-4 py-2 text-right">التاريخ</th>
+                                    <th class="px-4 py-2 text-right">المبلغ</th>
+                                    <th class="px-4 py-2 text-right">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for invoice in client.invoices %}
+                                <tr class="border-b border-gray-700">
+                                    <td class="px-4 py-2 text-white">{{ invoice.invoice_number }}</td>
+                                    <td class="px-4 py-2 text-white">{{ invoice.date.strftime('%Y-%m-%d') }}</td>
+                                    <td class="px-4 py-2 text-white">{{ "%.2f"|format(invoice.total_amount) }}</td>
+                                    <td class="px-4 py-2">
+                                        {% if invoice.status == 'paid' %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-500 text-white">مدفوع</span>
+                                        {% elif invoice.status == 'partial' %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-500 text-white">مدفوع جزئياً</span>
+                                        {% else %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-red-500 text-white">غير مدفوع</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
