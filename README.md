@@ -48,7 +48,7 @@ A powerful and modern inventory management system specifically designed for jean
 ## 📸 Screenshots
 
 ### Dashboard
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](jeans-inventory/screenshots/dashboard.png)
 
 ### Inventory
 ![Inventory](screenshots/inventory.png)
