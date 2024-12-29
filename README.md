@@ -80,39 +80,4 @@ flask db upgrade
 
 # Run the application
 flask run
-
-👥 User Roles
-Owner: Full system access
-HR: User management
-Staff: Basic operations
-🔐 Security Features
-Role-based access control
-Secure password storage
-Session management
-Activity logging
-📱 Responsive Design
-Mobile-friendly interface
-Tablet optimization
-Desktop-first approach
-🌐 Localization
-Full Arabic interface
-RTL support
-Customizable date formats
-💼 Business Features
-Multi-warehouse management
-Debt tracking
-Payment history
-Stock alerts
-🔄 Backup & Restore
-Database backup
-Excel export
-PDF reporting
-Data restoration
-📋 License
-© 2024 A&M. All rights reserved.
-
-📞 Support
-For support and inquiries:
-
-📧 Email: support@am.com
-📱 Phone: +20 XXX XXX XXXX
+```
